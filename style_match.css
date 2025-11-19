@@ -10,6 +10,7 @@ body {
   height: 100vh;
   overflow: hidden;
 }
+
 :root {
     --color-primary-1: #fff9ea;
     --color-primary-2: #000000;
@@ -28,7 +29,6 @@ body {
   align-items: center;
   background-color: var(--color-primary-1);
 }
-
 #swiper {
   height: 70vh;
   aspect-ratio: 2 / 3;
@@ -36,6 +36,17 @@ body {
   perspective-origin: center 50%;
   transform-style: preserve-3d;
   position: relative;
+}
+.descricao {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 18px;
+  text-align: center;
+  font-weight: 600;
 }
 
 .card {
