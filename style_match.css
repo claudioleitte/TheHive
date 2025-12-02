@@ -30,7 +30,7 @@ body {
   background-color: var(--color-primary-1);
 }
 
-/* Área do swiper */
+/* Área dos cards */
 #swiper {
   height: 70vh;
   aspect-ratio: 2 / 3;
@@ -40,21 +40,33 @@ body {
   position: relative;
 }
 
+/* Garante que TUDO no card fica atrás da descrição */
+.card {
+  position: relative;
+}
+
+.card * {
+  position: relative;
+  z-index: 1;
+}
+
 /* Descrição estilo Tinder */
 .descricao {
   position: absolute;
   bottom: 0;
+  left: 0;
+
   width: 100%;
   padding: 25px 20px;
 
-  /* gradiente Tinder */
   background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0));
-
   color: white;
+
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  text-align: left;
+
+  z-index: 999 !important; /* SEMPRE NA FRENTE */
 }
 
 .descricao h2 {
@@ -66,19 +78,24 @@ body {
 .descricao p {
   margin-top: 6px;
   font-size: 15px;
-  font-weight: 400;
   opacity: 0.9;
 }
 
-/* Card */
+/* Cards */
 .card {
   width: 100%;
   height: 100%;
-  position: absolute;
   border-radius: 20px;
   overflow: hidden;
-  transform: translateZ(calc(-30px * var(--i))) translateY(calc(-20px * var(--i))) rotate(calc(-4deg * var(--i)));
+
+  position: absolute;
+
+  transform: translateZ(calc(-30px * var(--i))) 
+             translateY(calc(-20px * var(--i))) 
+             rotate(calc(-4deg * var(--i)));
+
   filter: drop-shadow(2px 2px 20px rgba(0, 0, 0, 0.5));
+
   cursor: pointer;
   user-select: none;
   transition: transform 0.5s;
@@ -88,17 +105,17 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 50%;
 }
 
-/* Botões like / dislike */
+/* Botões */
 #like,
 #dislike {
   font-size: 16vh;
   border-radius: 50%;
   padding: 20px;
+
   position: relative;
-  z-index: 1;
+  z-index: 5;
 
   animation-name: animation1;
   animation-duration: 1s;
@@ -122,7 +139,7 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* animações */
+/* Animações */
 @keyframes animation1 {
   0%, 100% { opacity: 0.2; }
   50% { opacity: 1; }
