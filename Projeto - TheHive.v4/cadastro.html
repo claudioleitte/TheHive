@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro República Universitária</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #e9a20946;
+            padding: 20px;
+        }
+
+        .container {
+            width: 1000px;
+            background: #fff;
+            border-radius: 25px;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 0 25px rgba(0,0,0,0.15);
+        }
+
+        .left {
+            width: 40%;
+            background: #e9a209;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .left img {
+            width: 90%;
+            border-radius: 20px;
+        }
+
+        .right {
+            width: 60%;
+            padding: 35px;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        h1 { font-size: 32px; margin-bottom: 8px; }
+        p { margin-bottom: 20px; color: #444; }
+
+        label { margin-top: 12px; font-size: 15px; display: block; }
+
+        input, select, textarea {
+            width: 100%;
+            margin-top: 5px;
+            padding: 12px;
+            border-radius: 30px;
+            border: 1px solid #bbb;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        textarea {
+            border-radius: 15px;
+            resize: none;
+            height: 80px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #ffd17b;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 40px;
+            background: #e9a209;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #e9a209;
+        }
+
+        .hidden { display: none; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="left">
+            <img src="comeia.png" alt="República">
+        </div>
+
+        <div class="right">
+            <h1>Cadastro da República</h1>
+            <p>Complete seu perfil com todas as informações necessárias.</p>
+
+            <form id="formCadastro">
+
+                <!-- Nome -->
+                <label>Nome completo</label>
+                <input type="text" required>
+
+                <!-- Email -->
+                <label>Email</label>
+                <input type="email" required>
+
+                <!-- Senha -->
+                <label>Senha</label>
+                <input type="password" required>
+                <label>Confirmação de Senha</label>
+                <input type="password" required>
+
+                <!-- Curso -->
+                <label>Curso</label>
+                <input type="text" placeholder="Ex: Engenharia, Medicina, Direito..." required>
+
+                <!-- Localização -->
+                <label>Estado</label>
+                <input type="text" placeholder="Ex: MG, SP, RJ..." required>
+
+                <label>Cidade</label>
+                <input type="text" placeholder="Ex: Ouro Preto, São Paulo, BH..." required>
+
+                <label>Endereço</label>
+                <input type="text" placeholder="Rua, número, bairro..." required>
+
+                <!-- Tipo de quarto -->
+                <label>Tipo de quarto</label>
+                <select required>
+                    <option value="">Selecione...</option>
+                    <option value="individual">Individual</option>
+                    <option value="suite">Suíte</option>
+                    <option value="compartilhado">Compartilhado</option>
+                </select>
+
+                <!-- Animal de estimação -->
+                <label>Aceita animal de estimação?</label>
+                <select id="animalSelect" required>
+                    <option value="">Selecione...</option>
+                    <option value="nao">Não</option>
+                    <option value="sim">Sim</option>
+                </select>
+
+                <div id="animalTipoDiv" class="hidden">
+                    <label>Qual animal?</label>
+                    <input type="text" placeholder="Cachorro, gato, coelho...">
+
+                    <label>Quantidade</label>
+                    <input type="number" min="1" max="10" value="1">
+                </div>
+
+                <!-- Preferências de convivência -->
+                <label>Preferências de convivência</label>
+                <select>
+                    <option value="">Selecione...</option>
+                    <option value="nao_fumante">Prefiro não fumantes</option>
+                    <option value="fumante_ok">Aceito fumantes</option>
+                    <option value="som_baixo">Ambiente silencioso</option>
+                    <option value="som_alto">Ambiente mais animado</option>
+                    <option value="tanto_faz">Tanto faz</option>
+                </select>
+
+                <!-- Gênero -->
+                <label>Gênero da república</label>
+                <select required>
+                    <option value="">Selecione...</option>
+                    <option value="masculina">Masculina</option>
+                    <option value="feminina">Feminina</option>
+                    <option value="mista">Mista</option>
+                </select>
+
+                <!-- Idade dos moradores -->
+                <label>Faixa etária da república</label>
+                <select>
+                    <option value="">Selecione...</option>
+                    <option value="18-20">18 a 20 anos</option>
+                    <option value="21-25">21 a 25 anos</option>
+                    <option value="25+">Acima de 25</option>
+                </select>
+
+                <!-- Preço -->
+                <label>Faixa de preço mensal</label>
+                <input type="number" placeholder="Ex: 450, 600, 900..." required>
+
+                <!-- Data de entrada -->
+                <label>Data de entrada</label>
+                <input type="date" required>
+
+                <!-- Foto -->
+                <label>Foto da república</label>
+                <input type="file" accept="image/*">
+
+                <!-- Observações gerais -->
+                <label>Observações</label>
+                <textarea placeholder="Informações adicionais..."></textarea>
+
+                <!-- BOTÃO -->
+                <button class="btn" type="submit">Cadastrar</button>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const animalSelect = document.getElementById("animalSelect");
+        const animalTipoDiv = document.getElementById("animalTipoDiv");
+
+        animalSelect.addEventListener("change", () => {
+            if (animalSelect.value === "sim") {
+                animalTipoDiv.classList.remove("hidden");
+            } else {
+                animalTipoDiv.classList.add("hidden");
+            }
+        });
+
+        document.getElementById("formCadastro").addEventListener("submit", function(e) {
+            e.preventDefault();
+            alert("Cadastro concluído com sucesso!");
+        });
+    </script>
+
+</body>
+</html>
