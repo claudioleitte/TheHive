@@ -1,6 +1,4 @@
-Fala, Brunão! Aqui vai um **README.md sugerido** para o teu repositório TheHive (o teu projeto estilo “mistura de Tinder com Quinto Andar para moradia”) — é só copiar para o `README.md` e ajustar conforme quiseres 👇
 
-```markdown
 # TheHive 🏠
 
 **TheHive** — Plataforma de conexão para pessoas que buscam moradia, inspirada em apps de social/mercado imobiliário.
