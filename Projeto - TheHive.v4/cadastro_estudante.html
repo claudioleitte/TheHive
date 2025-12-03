@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Visão Estudante — Seleções</title>
+<style>
+  :root{
+    --bg:#f7f7f8;
+    --card:#ffffff;
+    --accent:#e9a209;   
+    --accent-2:#e9a209;
+    --muted:#94928f;
+    --radius:18px;
+    --shadow:0 8px 30px rgba(15,15,20,0.08);
+  }
+
+  /* body / center */
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(180deg,#fbfbfc 0%, #f0eef6 100%);
+    font-family: Inter, "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:24px;
+  }
+
+  /* mobile phone frame */
+  .phone {
+    width:360px;
+    max-width:94vw;
+    background:var(--card);
+    border-radius:30px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    border: 8px solid #0f0f0f00; /* small transparent border for anti-alias */
+  }
+
+  /* top bar like mobile */
+  .status {
+    height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(180deg, #fff 0%, #fff 40%);
+    position:relative;
+  }
+  .status .title{
+    font-weight:600;
+    color:#222;
+  }
+  .status .skip{
+    position:absolute;
+    right:14px;
+    top:12px;
+    font-size:13px;
+    color:var(--muted);
+    cursor:pointer;
+  }
+
+  /* content area */
+  .content{
+    padding:20px;
+    background:linear-gradient(180deg,#fff 0%, #fff 60%);
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    max-height:78vh;
+    overflow:auto;
+  }
+
+  h2{
+    font-size:18px;
+    margin:0;
+    color:#2b2b30;
+  }
+  p.lead{
+    margin:6px 0 0 0;
+    color:var(--muted);
+    font-size:13px;
+  }
+
+  /* section card */
+  .section{
+    background:linear-gradient(180deg,#fff 0%, #fff 100%);
+    border-radius:14px;
+    padding:12px;
+    box-shadow:0 6px 18px rgba(12,12,15,0.03);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .section .head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+  }
+  .section .head small{
+    color:var(--muted);
+    font-size:12px;
+  }
+
+  /* selectable list */
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:4px;
+  }
+
+  .option {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid #f0f0f2;
+    cursor:pointer;
+    background:transparent;
+    transition:all .18s ease;
+    user-select:none;
+  }
+  .option:hover{ transform:translateY(-3px); box-shadow:0 8px 20px rgba(12,12,15,0.04);}
+  .option .left {
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .option .bullet{
+    width:36px; height:36px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(180deg,#fafafa,#fff);
+    border:1px solid #f0f0f2;
+    font-weight:600; color:#444;
+  }
+  .option .label{
+    font-size:15px; color:#222;
+  }
+  .option .sub{
+    font-size:12px; color:var(--muted); margin-top:4px;
+  }
+
+  /* checked state */
+  .option.selected{
+    background:linear-gradient(90deg, rgba(255,75,107,0.08), rgba(255,122,154,0.04));
+    border:1px solid rgba(255,75,107,0.18);
+    box-shadow:0 6px 18px rgba(255,75,107,0.06);
+  }
+  .check {
+    width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    color:#fff;font-weight:700;
+    transform:scale(.98);
+  }
+  .check svg{ width:18px;height:18px; }
+
+  /* note small */
+  .note{
+    font-size:12px;color:var(--muted);
+  }
+
+  /* continue area */
+  .footer{
+    padding:16px;
+    border-top:1px solid #f4f4f6;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(180deg,#fff 0%, #fff 100%);
+  }
+  .btn-continue{
+    width:88%;
+    padding:14px 16px;
+    border-radius:40px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    color:#fff;
+    border:none;
+    font-weight:700;
+    font-size:15px;
+    box-shadow:0 8px 30px rgba(255, 207, 75, 0.822);
+    cursor:pointer;
+  }
+  .summary{
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    background:rgba(0,0,0,0.7);
+    color:#fff; padding:18px;border-radius:12px;
+    display:none;
+    z-index:60;
+  }
+
+  /* responsive small */
+  @media (max-width:380px){
+    .phone{ width:94vw; border-radius:16px; }
+    .option .bullet, .check { width:34px;height:34px;border-radius:10px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="phone" role="application" aria-label="Tela de seleção do estudante">
+  <div class="status">
+    <div class="title">Estudante</div>
+    <div class="skip" id="skipBtn">Pular</div>
+  </div>
+
+  <div class="content">
+
+    <!-- Intro -->
+    <div>
+      <h2>Conte-nos sobre você</h2>
+      <p class="lead">Marque suas preferências — toque para selecionar. Algumas categorias têm limite de escolhas.</p>
+    </div>
+
+    <!-- Course (single) -->
+    <div class="section" data-key="curso" data-limit="1">
+      <div class="head"><strong>Curso</strong><small>Escolha 1</small></div>
+      <div class="options">
+        <div class="option" data-value="Engenharia"><div class="left"><div class="bullet">E</div><div><div class="label">Engenharia</div><div class="sub">Mecânica, Civil, Elétrica...</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Medicina"><div class="left"><div class="bullet">M</div><div><div class="label">Medicina</div><div class="sub">Saúde & clínica</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Direito"><div class="left"><div class="bullet">D</div><div><div class="label">Direito</div><div class="sub">Advocacia, jurídico</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Computação"><div class="left"><div class="bullet">C</div><div><div class="label">Computação</div><div class="sub">TI, Software</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Outro"><div class="left"><div class="bullet">+</div><div><div class="label">Outro</div><div class="sub">Informe manualmente depois</div></div></div><div class="meta"></div></div>
+      </div>
+    </div>
+
+    <!-- Interests (multi up to 3) -->
+    <div class="section" data-key="interesses" data-limit="3">
+      <div class="head"><strong>Interesses</strong><small>Escolha até 3</small></div>
+      <div class="options">
+        <div class="option" data-value="Esportes"><div class="left"><div class="bullet">🏀</div><div><div class="label">Esportes</div><div class="sub">Futebol, vôlei, academia</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Estudos"><div class="left"><div class="bullet">📚</div><div><div class="label">Estudos</div><div class="sub">Sessões de estudo</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Música"><div class="left"><div class="bullet">🎧</div><div><div class="label">Música</div><div class="sub">Tocar/curtir som</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Eventos"><div class="left"><div class="bullet">🎉</div><div><div class="label">Eventos</div><div class="sub">Festas & confraternizações</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Jogos"><div class="left"><div class="bullet">🎮</div><div><div class="label">Jogos</div><div class="sub">Gamers & boardgames</div></div></div><div class="meta"></div></div>
+      </div>
+    </div>
+
+    <!-- Living style (up to 2) -->
+    <div class="section" data-key="estilo_conv" data-limit="2">
+      <div class="head"><strong>Estilo de convivência</strong><small>Escolha até 2</small></div>
+      <div class="options">
+        <div class="option" data-value="Silencioso"><div class="left"><div class="bullet">🤫</div><div><div class="label">Silencioso</div><div class="sub">Ambiente calmo</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Festeiro"><div class="left"><div class="bullet">🥳</div><div><div class="label">Festeiro</div><div class="sub">Gosta de receber</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Organizado"><div class="left"><div class="bullet">🧹</div><div><div class="label">Organizado</div><div class="sub">Limpeza & rotina</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Noturno"><div class="left"><div class="bullet">🌙</div><div><div class="label">Noite ativa</div><div class="sub">Estudo/trabalho à noite</div></div></div><div class="meta"></div></div>
+      </div>
+    </div>
+
+    <!-- Preferences republic (single) -->
+    <div class="section" data-key="pref_republica" data-limit="1">
+      <div class="head"><strong>Preferências de república</strong><small>Escolha 1</small></div>
+      <div class="options">
+        <div class="option" data-value="Masculina"><div class="left"><div class="bullet">M</div><div><div class="label">Masculina</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Feminina"><div class="left"><div class="bullet">F</div><div><div class="label">Feminina</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Mista"><div class="left"><div class="bullet">★</div><div><div class="label">Mista</div></div></div><div class="meta"></div></div>
+      </div>
+    </div>
+
+    <!-- Pets (multi up to 2) -->
+    <div class="section" data-key="pets" data-limit="2">
+      <div class="head"><strong>Animais de estimação</strong><small>Escolha até 2</small></div>
+      <div class="options">
+        <div class="option" data-value="Cachorro"><div class="left"><div class="bullet">🐶</div><div><div class="label">Cachorro</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Gato"><div class="left"><div class="bullet">🐱</div><div><div class="label">Gato</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Peixe"><div class="left"><div class="bullet">🐠</div><div><div class="label">Peixe</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="OutroPet"><div class="left"><div class="bullet">🦎</div><div><div class="label">Outro</div></div></div><div class="meta"></div></div>
+      </div>
+    </div>
+
+    <!-- Characteristics (multi up to 3) -->
+    <div class="section" data-key="caracteristicas" data-limit="3">
+      <div class="head"><strong>Características pessoais</strong><small>Escolha até 3</small></div>
+      <div class="options">
+        <div class="option" data-value="Pontual"><div class="left"><div class="bullet">⌚</div><div><div class="label">Pontual</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Colaborativo"><div class="left"><div class="bullet">🤝</div><div><div class="label">Colaborativo</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Reservado"><div class="left"><div class="bullet">🧘</div><div><div class="label">Reservado</div></div></div><div class="meta"></div></div>
+        <div class="option" data-value="Comunicativo"><div class="left"><div class="bullet">💬</div><div><div class="label">Comunicativo</div></div></div><div class="meta"></div></div>
+      </div>
+    </div>
+
+    <!-- show on profile -->
+    <div class="section" data-key="mostrar_no_perfil" data-limit="1">
+      <div class="head"><strong>Mostrar minhas escolhas no perfil</strong><small>Visibilidade pública</small></div>
+      <div style="display:flex; gap:10px; margin-top:8px;">
+        <label style="flex:1; display:flex; gap:10px; align-items:center; padding:10px; border-radius:12px; border:1px solid #f0f0f2; cursor:pointer;">
+          <input id="mostrarPerfil" type="checkbox" style="accent-color:var(--accent); transform:scale(1.15);" />
+          <div style="font-size:14px;">Sim, mostrar no meu perfil</div>
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <button class="btn-continue" id="continueBtn">CONTINUAR</button>
+  </div>
+</div>
+
+<!-- summary modal -->
+<div id="summary" class="summary" role="dialog" aria-live="polite"></div>
+
+<script>
+/* 
+ JS: gerencia seleção por seção (limites, toggle e captura)
+ - Cada .section tem data-key e data-limit
+ - Cada .option tem data-value
+ - Ao selecionar, alterna classe .selected
+ - Respeita limite; mostra breve feedback se estourar limite
+*/
+
+document.addEventListener('DOMContentLoaded', () => {
+  const sections = Array.from(document.querySelectorAll('.section'));
+
+  // inicializa listener para cada opção
+  sections.forEach(sec => {
+    const limit = parseInt(sec.dataset.limit || '1', 10);
+    const key = sec.dataset.key;
+    const opts = Array.from(sec.querySelectorAll('.option'));
+
+    opts.forEach(opt => {
+      opt.addEventListener('click', () => {
+        const currentlySelected = sec.querySelectorAll('.option.selected');
+        const isSelected = opt.classList.contains('selected');
+
+        // se limite 1 -> comportamento radio
+        if (limit === 1) {
+          // desfaz os outros e seleciona este (ou remove se já selecionado)
+          currentlySelected.forEach(s => s.classList.remove('selected'));
+          if (!isSelected) opt.classList.add('selected');
+          else opt.classList.remove('selected');
+        } else {
+          // multi-select com limite
+          if (!isSelected) {
+            if (currentlySelected.length >= limit) {
+              // pequena vibração visual: piscar borda
+              opt.animate([{ boxShadow: '0 0 0 rgba(0,0,0,0)' }, { boxShadow: '0 0 0 4px rgba(255,75,107,0.08)' }], { duration: 250 });
+              // feedback curto
+              showTempToast(`Máximo de ${limit} opções nesta seção`);
+              return;
+            }
+            opt.classList.add('selected');
+          } else {
+            opt.classList.remove('selected');
+          }
+        }
+        // anima check icon creation
+        updateMeta(opt);
+      });
+    });
+
+    // setar metas visuais iniciais
+    opts.forEach(updateMeta);
+  });
+
+  // update meta area (add check icon when selected)
+  function updateMeta(optEl){
+    const meta = optEl.querySelector('.meta');
+    if (optEl.classList.contains('selected')) {
+      meta.innerHTML = `<div class="check" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+      </div>`;
+    } else {
+      meta.innerHTML = '';
+    }
+  }
+
+  // mostrar toast temporário (no topo do conteúdo)
+  let toastTimeout;
+  function showTempToast(text){
+    clearTimeout(toastTimeout);
+    let t = document.querySelector('.temp-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.className = 'temp-toast';
+      t.style = "position:fixed; top:24px; left:50%; transform:translateX(-50%); background:rgba(20,20,20,0.85); color:white; padding:8px 14px; border-radius:12px; z-index:80; font-size:13px;";
+      document.body.appendChild(t);
+    }
+    t.textContent = text;
+    t.style.display = 'block';
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(()=> t.style.display = 'none', 1500);
+  }
+
+  // Continue button -> coleta dados
+  document.getElementById('continueBtn').addEventListener('click', () => {
+    const payload = {};
+    sections.forEach(sec => {
+      const key = sec.dataset.key;
+      const selected = Array.from(sec.querySelectorAll('.option.selected')).map(o => o.dataset.value);
+      // special: curso single, etc -> store as single string
+      if (selected.length === 0) {
+        // keep empty
+      } else if (selected.length === 1) {
+        payload[key] = selected[0];
+      } else {
+        payload[key] = selected;
+      }
+    });
+    // mostrar também o estado do checkbox
+    payload.mostrar_no_perfil = !!document.getElementById('mostrarPerfil').checked;
+
+    showSummary(payload);
+  });
+
+  // Skip button
+  document.getElementById('skipBtn').addEventListener('click', () => {
+    showTempToast('Você pulou esta etapa');
+  });
+
+  // summary modal
+  function showSummary(data){
+    const div = document.getElementById('summary');
+    const lines = [];
+    for (const k in data){
+      let v = data[k];
+      if (Array.isArray(v)) v = v.join(', ');
+      lines.push(`<strong>${friendlyKey(k)}:</strong> ${v || '<em>—</em>'}`);
+    }
+    div.innerHTML = `<div style="max-width:300px;">
+      <h3 style="margin:0 0 8px 0;">Resumo das escolhas</h3>
+      <div style="font-size:13px; line-height:1.4;">${lines.join('<br>')}</div>
+      <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
+        <button id="closeSum" style="padding:8px 12px; border-radius:10px; border:none; background:#fff; color:#222;">Fechar</button>
+        <button id="confirmSum" style="padding:8px 12px; border-radius:10px; border:none; background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff;">Confirmar</button>
+      </div>
+    </div>`;
+    div.style.display = 'block';
+    document.getElementById('closeSum').onclick = () => div.style.display = 'none';
+    document.getElementById('confirmSum').onclick = () => {
+      div.style.display = 'none';
+      // aqui você pode enviar os dados pro backend (fetch)
+      showTempToast('Preferências salvas (simulação)');
+      console.log('payload enviado:', data);
+    };
+  }
+
+  function friendlyKey(k){
+    const map = {
+      curso:'Curso',
+      interesses:'Interesses',
+      estilo_conv:'Estilo de convivência',
+      pref_republica:'Preferência de república',
+      pets:'Animais',
+      caracteristicas:'Características',
+      mostrar_no_perfil:'Mostrar no perfil'
+    };
+    return map[k] || k;
+  }
+});
+</script>
+</body>
+</html>
